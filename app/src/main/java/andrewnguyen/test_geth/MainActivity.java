@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     Context ctx;
     TextView textbox;
     Node node;
+    Accounts accounts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("Android In-Process Node");
         textbox = (TextView) findViewById(R.id.textBox);
-        
+
         try {
             //Read the genesis file to a string
             InputStream is = this.getAssets().open("ropsten_genesis.json");
@@ -53,20 +54,26 @@ public class MainActivity extends AppCompatActivity {
             //Create an account using "Keystore"
             KeyStore keyStore = new KeyStore(this.getFilesDir() + "/keystore",
                     Geth.StandardScryptN, Geth.StandardScryptP);
-            newAcc = keyStore.newAccount("password"); //Password is "password"
+            accounts = keyStore.getAccounts();
+            if(accounts.get(0)==null) {
+                Account acc = keyStore.newAccount("Password");
+                accounts.set(0, acc);
+            }
+            accounts.get(0);
             //print account address
-            textbox.append("My Account Address: " + newAcc.getAddress().getHex().toString() + "\n");
+            textbox.append("My Account Address: " + accounts.get(0).getAddress().getHex().toString() + "\n");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     public void getAccountBalanceButton(View view){
-        System.out.println("My Account Address: " + newAcc.getAddress().getHex().toString() + "\n");
         try {
+            System.out.println("My Account Address: " + accounts.get(0).getAddress().getHex().toString() + "\n");
             //TODO fix this function - trie node error when synced
             ec = node.getEthereumClient();
-            System.out.println("My Account Balance: " + ec.getBalanceAt(ctx, newAcc.getAddress(), 4) + "\n");
+            textbox.append("Latest block: " + ec.getBlockByNumber(ctx, -1).getNumber());
+            System.out.println("My Account Balance: " + ec.getBalanceAt(ctx, accounts.get(0).getAddress(), -1).toString() + "\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
