@@ -1,17 +1,19 @@
 package andrewnguyen.test_geth;
 
-import android.accounts.AccountManager;
-import android.content.pm.PackageInstaller;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import org.ethereum.geth.*;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.io.InputStream;
 
+
+//Check imports for geth - shows all commands
+//https://ethereum.karalabe.com/talks/2016-devcon.html#15
+//https://github.com/ethereum/go-ethereum/wiki/Mobile-Clients:-Libraries-and-Inproc-Ethereum-Nodes
+//https://github.com/ethereum/go-ethereum/issues/3789
+//https://ethereum.stackexchange.com/questions/12924/how-to-do-a-testnet-transaction-on-android-with-geth-1-5-9
+//
 public class MainActivity extends AppCompatActivity {
     Account newAcc;
     EthereumClient ec;
