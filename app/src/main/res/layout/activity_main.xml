@@ -23,4 +23,12 @@
         android:layout_alignParentLeft="true"
         android:onClick="getAccountBalanceButton"
         android:id="@+id/button" />
+    <Button
+        android:text="Send Ether"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:onClick="sendTransaction"
+        android:id="@+id/transaction" />
 </RelativeLayout>

@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             }
             //print account address
             textbox.append("Sender Address: " + keyStore.getAccounts().get(0).getAddress().getHex().toString() + "\n");
-            textbox.append("Receiver Address: " + keyStore.getAccounts().get(0).getAddress().getHex().toString() + "\n");
+            textbox.append("Receiver Address: " + keyStore.getAccounts().get(1).getAddress().getHex().toString() + "\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,10 +74,48 @@ public class MainActivity extends AppCompatActivity {
     public void getAccountBalanceButton(View view){
         try {
             ec = node.getEthereumClient();
-            System.out.println("My Account 1 Balance: " + ec.getBalanceAt(ctx, keyStore.getAccounts().get(0).getAddress(), -1).toString() + "\n");
-            System.out.println("My Account 2 Balance: " + ec.getBalanceAt(ctx, keyStore.getAccounts().get(1).getAddress(), -1).toString() + "\n");
+            System.out.println("Sender: " + ec.getBalanceAt(ctx, keyStore.getAccounts().get(0).getAddress(), -1).toString() + "\n");
+            System.out.println("Receiver: " + ec.getBalanceAt(ctx, keyStore.getAccounts().get(1).getAddress(), -1).toString() + "\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    public void sendTransaction(View view){//TODO Transaction executed but accounts not affected??
+        try {
+            ec = node.getEthereumClient();
+            nonce = ec.getPendingNonceAt(ctx, keyStore.getAccounts().get(0).getAddress());
+            String data_string = "Test Data for Transaction";
+            byte[] data = data_string.getBytes();
+            BigInt value = Geth.newBigInt(210010001);
+            BigInt gasLimit = Geth.newBigInt(1000000);
+            BigInt gasPrice = Geth.newBigInt(65);
+            Transaction transaction = Geth.newTransaction(nonce, keyStore.getAccounts().get(1).getAddress(), value, gasLimit, gasPrice, data);
+            keyStore.timedUnlock(keyStore.getAccounts().get(0), "Password", 100000000);//probably too high of a timeout
+            transaction = keyStore.signTx(keyStore.getAccounts().get(0), transaction, new BigInt(4));//Network ID
+            ec.sendTransaction(ctx, transaction);
+            log_transaction(transaction);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void log_transaction(Transaction transaction){
+        try{
+            android.util.Log.i(TAG, "Cost: " + transaction.getCost());
+            android.util.Log.i(TAG, "GasPrice: " + transaction.getGasPrice());
+            android.util.Log.i(TAG, "Gas: " + transaction.getGas());
+            android.util.Log.i(TAG, "Nonce: " + transaction.getNonce());
+            android.util.Log.i(TAG, "Value: " + transaction.getValue());
+            android.util.Log.i(TAG, "Sig-Hash Hex: " + transaction.getSigHash().getHex());
+            android.util.Log.i(TAG, "Hash Hex: " + transaction.getHash().getHex());
+            android.util.Log.i(TAG, "Data-Length: " + transaction.getData().length);
+            android.util.Log.i(TAG, "Receiver: " + transaction.getTo().getHex());
+            android.util.Log.i(TAG, "Sender: " + transaction.getFrom(new BigInt(4)).getHex().toString());//Network ID
+//            android.util.Log.i(TAG, "Receipt: " + ec.getTransactionReceipt(ctx,transaction.getHash()));//TODO can't find receipt
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }
