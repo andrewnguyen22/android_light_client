@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             }
             //print account address
             textbox.append("Sender Address: " + keyStore.getAccounts().get(0).getAddress().getHex().toString() + "\n");
-            textbox.append("Receiver Address: " + keyStore.getAccounts().get(0).getAddress().getHex().toString() + "\n");
+            textbox.append("Receiver Address: " + keyStore.getAccounts().get(1).getAddress().getHex().toString() + "\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
