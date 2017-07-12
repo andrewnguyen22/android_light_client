@@ -2,9 +2,11 @@ package andrewnguyen.test_geth;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.*;
 import android.view.View;
 import android.widget.TextView;
 import org.ethereum.geth.*;
+
 import java.io.InputStream;
 
 
@@ -20,7 +22,10 @@ public class MainActivity extends AppCompatActivity {
     Context ctx;
     TextView textbox;
     Node node;
-    Accounts accounts;
+    KeyStore keyStore;
+    NodeConfig conf;
+    long nonce;
+    final String TAG = "Transaction info";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("Android In-Process Node");
         textbox = (TextView) findViewById(R.id.textBox);
-
         try {
             //Read the genesis file to a string
             InputStream is = this.getAssets().open("ropsten_genesis.json");
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
             is.close();
             String genesis = new String(buffer, "UTF-8");
             //configure the node with a genesis file and network id
-            NodeConfig conf = Geth.newNodeConfig();
+            conf = Geth.newNodeConfig();
             conf.setEthereumGenesis(genesis);
             conf.setEthereumNetworkID(4);
             //create a folder "ethereum" to store the node
@@ -52,28 +56,26 @@ public class MainActivity extends AppCompatActivity {
             textbox.append("My address: " + info.getListenerAddress() + "\n");
             textbox.append("My protocols: " + info.getProtocols() + "\n\n");
             //Create an account using "Keystore"
-            KeyStore keyStore = new KeyStore(this.getFilesDir() + "/keystore",
+            keyStore = new KeyStore(this.getFilesDir() + "/keyl;kasdf;ljkasdf",
                     Geth.StandardScryptN, Geth.StandardScryptP);
-            accounts = keyStore.getAccounts();
-            if(accounts.get(0)==null) {
+            if(keyStore.getAccounts().size()==0) {
                 Account acc = keyStore.newAccount("Password");
-                accounts.set(0, acc);
+                keyStore.getAccounts().set(0, acc);
+                acc = keyStore.newAccount("Password");
+                keyStore.getAccounts().set(1,acc);
             }
-            accounts.get(0);
             //print account address
-            textbox.append("My Account Address: " + accounts.get(0).getAddress().getHex().toString() + "\n");
-
+            textbox.append("Sender Address: " + keyStore.getAccounts().get(0).getAddress().getHex().toString() + "\n");
+            textbox.append("Receiver Address: " + keyStore.getAccounts().get(0).getAddress().getHex().toString() + "\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     public void getAccountBalanceButton(View view){
         try {
-            System.out.println("My Account Address: " + accounts.get(0).getAddress().getHex().toString() + "\n");
-            //TODO fix this function - trie node error when synced
             ec = node.getEthereumClient();
-            textbox.append("Latest block: " + ec.getBlockByNumber(ctx, -1).getNumber());
-            System.out.println("My Account Balance: " + ec.getBalanceAt(ctx, accounts.get(0).getAddress(), -1).toString() + "\n");
+            System.out.println("My Account 1 Balance: " + ec.getBalanceAt(ctx, keyStore.getAccounts().get(0).getAddress(), -1).toString() + "\n");
+            System.out.println("My Account 2 Balance: " + ec.getBalanceAt(ctx, keyStore.getAccounts().get(1).getAddress(), -1).toString() + "\n");
         } catch (Exception e) {
             e.printStackTrace();
         }
