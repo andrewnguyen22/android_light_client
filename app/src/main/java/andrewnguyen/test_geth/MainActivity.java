@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import org.ethereum.geth.*;
 
+
 import java.io.InputStream;
 
 
@@ -15,6 +16,7 @@ import java.io.InputStream;
 //https://github.com/ethereum/go-ethereum/wiki/Mobile-Clients:-Libraries-and-Inproc-Ethereum-Nodes
 //https://github.com/ethereum/go-ethereum/issues/3789
 //https://ethereum.stackexchange.com/questions/12924/how-to-do-a-testnet-transaction-on-android-with-geth-1-5-9
+//https://stackoverflow.com/questions/43298324/go-ethereum-mobile-android-contract-abi-error
 
 public class MainActivity extends AppCompatActivity {
     Account newAcc;
@@ -58,20 +60,22 @@ public class MainActivity extends AppCompatActivity {
             //Create an account using "Keystore"
             keyStore = new KeyStore(this.getFilesDir() + "/keyl;kasdf;ljkasdf",
                     Geth.StandardScryptN, Geth.StandardScryptP);
-            if(keyStore.getAccounts().size()==0) {
+            if (keyStore.getAccounts().size() == 0) {
                 Account acc = keyStore.newAccount("Password");
                 keyStore.getAccounts().set(0, acc);
                 acc = keyStore.newAccount("Password");
-                keyStore.getAccounts().set(1,acc);
+                keyStore.getAccounts().set(1, acc);
             }
             //print account address
             textbox.append("Sender Address: " + keyStore.getAccounts().get(0).getAddress().getHex().toString() + "\n");
             textbox.append("Receiver Address: " + keyStore.getAccounts().get(1).getAddress().getHex().toString() + "\n");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void getAccountBalanceButton(View view){
+
+    public void getAccountBalanceButton(View view) {
         try {
             ec = node.getEthereumClient();
             System.out.println("Sender: " + ec.getBalanceAt(ctx, keyStore.getAccounts().get(0).getAddress(), -1).toString() + "\n");
@@ -80,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    public void sendTransaction(View view){
+
+    public void sendTransaction(View view) {
         try {
             ec = node.getEthereumClient();
             nonce = ec.getPendingNonceAt(ctx, keyStore.getAccounts().get(0).getAddress());
@@ -99,8 +104,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void log_transaction(Transaction transaction){
-        try{
+    private void log_transaction(Transaction transaction) {
+        try {
             android.util.Log.i(TAG, "Cost: " + transaction.getCost());
             android.util.Log.i(TAG, "GasPrice: " + transaction.getGasPrice());
             android.util.Log.i(TAG, "Gas: " + transaction.getGas());
@@ -111,11 +116,33 @@ public class MainActivity extends AppCompatActivity {
             android.util.Log.i(TAG, "Data-Length: " + transaction.getData().length);
             android.util.Log.i(TAG, "Receiver: " + transaction.getTo().getHex());
             android.util.Log.i(TAG, "Sender: " + transaction.getFrom(new BigInt(4)).getHex().toString());//Network ID
-//            android.util.Log.i(TAG, "Receipt: " + ec.getTransactionReceipt(ctx,transaction.getHash()));//TODO can't find receipt
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    public void smart_contract_interaction(View view){
+        //Smart Contract Interactions
+        try{
+            final String address_string = "0x8607e627604495ae9812c22bb1c98bdcba581978";
+            String abi = "[{\"constant\":false,\"inputs\":[],\"name\":\"get_s\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"new_s\",\"type\":\"string\"}],\"name\":\"set_s\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"inputs\":[{\"name\":\"d_s\",\"type\":\"string\"}],\"payable\":false,\"type\":\"constructor\"}]";
+            Address address = Geth.newAddressFromHex(address_string);
+            BoundContract contract = Geth.bindContract(address, abi, ec);
+            TransactOpts transactOpts = new TransactOpts();
+            transactOpts.setFrom(keyStore.getAccounts().get(0).getAddress());
+            transactOpts.setContext(ctx);
+            Transaction transaction = setString(contract, transactOpts,"Andrew Set This String");
+//            ec.sendTransaction(ctx, transaction);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    private Transaction setString(BoundContract contract, TransactOpts opts, String teststring) throws Exception {
+        //Sending String to Test Contract
+        Interfaces params = Geth.newInterfaces(1);
+        params.set(0, Geth.newInterface());
+        params.get(0).setString(teststring);
+        return contract.transact(opts, "set_s", params);//TODO function throws exception - > 'abi: cannot use slice as type string as argument'
+    }
 }
+

@@ -16,7 +16,7 @@
         android:text="" />
 
     <Button
-        android:text="Get Account Balance"
+        android:text="Balance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -31,4 +31,12 @@
         android:layout_alignParentRight="true"
         android:onClick="sendTransaction"
         android:id="@+id/transaction" />
+    <Button
+        android:text="SetString"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="smart_contract_interaction"
+        android:id="@+id/set_string" />
 </RelativeLayout>

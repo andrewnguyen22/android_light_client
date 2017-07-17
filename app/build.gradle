@@ -17,6 +17,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
 }
 
 dependencies {
@@ -27,5 +39,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'org.ethereum:geth:1.6.6'
     testCompile 'junit:junit:4.12'
-
+    compile ('org.web3j:core-android:2.2.1')
 }
