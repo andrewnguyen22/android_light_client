@@ -37,6 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:onClick="smart_contract_interaction"
+        android:onClick="smart_contract_interaction_get_string"
         android:id="@+id/set_string" />
 </RelativeLayout>

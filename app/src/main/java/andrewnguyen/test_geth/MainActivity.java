@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    public void smart_contract_interaction(View view){
+    public void smart_contract_interaction_set_string(View view){
         //Smart Contract Interactions
         try{
             final String address_string = "0x8607e627604495ae9812c22bb1c98bdcba581978";
@@ -140,9 +140,36 @@ public class MainActivity extends AppCompatActivity {
     private Transaction setString(BoundContract contract, TransactOpts opts, String teststring) throws Exception {
         //Sending String to Test Contract
         Interfaces params = Geth.newInterfaces(1);
-        params.set(0, Geth.newInterface());
-        params.get(0).setString(teststring);
+        Interface anInterface = Geth.newInterface();
+        anInterface.setString(teststring);
+        params.set(0,anInterface);
         return contract.transact(opts, "set_s", params);//TODO function throws exception - > 'abi: cannot use slice as type string as argument'
+    }
+    public void smart_contract_interaction_get_string(View view){
+        try{
+            final String address_string = "0x8607e627604495ae9812c22bb1c98bdcba581978";
+            String abi = "[{\"constant\":false,\"inputs\":[],\"name\":\"get_s\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"new_s\",\"type\":\"string\"}],\"name\":\"set_s\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"inputs\":[{\"name\":\"d_s\",\"type\":\"string\"}],\"payable\":false,\"type\":\"constructor\"}]";
+            Address address = Geth.newAddressFromHex(address_string);
+            BoundContract contract = Geth.bindContract(address, abi, ec);
+            CallOpts callOpts = Geth.newCallOpts();
+            callOpts.setContext(ctx);
+            callOpts.setGasLimit(31500);
+            System.out.println("OUTPUT: " + getString(contract, callOpts));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    private String getString(BoundContract contract, CallOpts opts) throws Exception {
+        Interfaces args = Geth.newInterfaces(0);
+        Interfaces results = Geth.newInterfaces(1);
+        Interface result = Geth.newInterface();
+        result.setDefaultString();
+        results.set(0, result);
+        contract.call(opts, results, "get_s", args);//TODO function throws exception - > 'abi: cannot unmarshal string in to []interface {}'
+        String string = results.get(0).getString();
+        return string;
     }
 }
 
