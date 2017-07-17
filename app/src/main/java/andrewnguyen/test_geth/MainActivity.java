@@ -80,15 +80,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    public void sendTransaction(View view){//TODO Transaction executed but accounts not affected??
+    public void sendTransaction(View view){
         try {
             ec = node.getEthereumClient();
             nonce = ec.getPendingNonceAt(ctx, keyStore.getAccounts().get(0).getAddress());
             String data_string = "Test Data for Transaction";
             byte[] data = data_string.getBytes();
-            BigInt value = Geth.newBigInt(210010001);
-            BigInt gasLimit = Geth.newBigInt(1000000);
-            BigInt gasPrice = Geth.newBigInt(65);
+            BigInt value = Geth.newBigInt(1000);
+            BigInt gasLimit = Geth.newBigInt(31500);
+            BigInt gasPrice = Geth.newBigInt(21001000100001L);
             Transaction transaction = Geth.newTransaction(nonce, keyStore.getAccounts().get(1).getAddress(), value, gasLimit, gasPrice, data);
             keyStore.timedUnlock(keyStore.getAccounts().get(0), "Password", 100000000);//probably too high of a timeout
             transaction = keyStore.signTx(keyStore.getAccounts().get(0), transaction, new BigInt(4));//Network ID
