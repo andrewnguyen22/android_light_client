@@ -122,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
     public void set_s(View view){
         try {
             MyContract myContract = new MyContract(ec);
-            myContract.get_s(ctx);
+//            myContract.get_s(ctx);
+            myContract.set_s(keyStore, ctx, "Test String");
         } catch (Exception e) {
             e.printStackTrace();
         }
