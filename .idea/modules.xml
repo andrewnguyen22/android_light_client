@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/geth/geth.iml" filepath="$PROJECT_DIR$/geth/geth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/geth-android-all-1.6.7-ab5646c5/geth-android-all-1.6.7-ab5646c5.iml" filepath="$PROJECT_DIR$/geth-android-all-1.6.7-ab5646c5/geth-android-all-1.6.7-ab5646c5.iml" />
       <module fileurl="file://$PROJECT_DIR$/geth-android-all-1.7.0-unstable-4d224977/geth-android-all-1.7.0-unstable-4d224977.iml" filepath="$PROJECT_DIR$/geth-android-all-1.7.0-unstable-4d224977/geth-android-all-1.7.0-unstable-4d224977.iml" />
       <module fileurl="file://$PROJECT_DIR$/test_geth.iml" filepath="$PROJECT_DIR$/test_geth.iml" />
     </modules>

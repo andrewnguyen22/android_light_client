@@ -2,7 +2,6 @@ package andrewnguyen.test_geth;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.*;
 import android.view.View;
 import android.widget.TextView;
 import org.ethereum.geth.*;
@@ -33,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("Android In-Process Node");
+        setTitle("Android Light Node");
         textbox = (TextView) findViewById(R.id.textBox);
         try {
             //Read the genesis file to a string
-            InputStream is = this.getAssets().open("ropsten_genesis.json");
+            InputStream is = this.getAssets().open("rinkeby_genesis.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);
@@ -120,56 +119,13 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    public void smart_contract_interaction_set_string(View view){
-        //Smart Contract Interactions
-        try{
-            final String address_string = "0x8607e627604495ae9812c22bb1c98bdcba581978";
-            String abi = "[{\"constant\":false,\"inputs\":[],\"name\":\"get_s\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"new_s\",\"type\":\"string\"}],\"name\":\"set_s\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"inputs\":[{\"name\":\"d_s\",\"type\":\"string\"}],\"payable\":false,\"type\":\"constructor\"}]";
-            Address address = Geth.newAddressFromHex(address_string);
-            BoundContract contract = Geth.bindContract(address, abi, ec);
-            TransactOpts transactOpts = new TransactOpts();
-            transactOpts.setFrom(keyStore.getAccounts().get(0).getAddress());
-            transactOpts.setContext(ctx);
-            Transaction transaction = setString(contract, transactOpts,"Andrew Set This String");
-//            ec.sendTransaction(ctx, transaction);
-        }
-        catch (Exception e){
+    public void set_s(View view){
+        try {
+            MyContract myContract = new MyContract(ec);
+            myContract.get_s(ctx);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-    private Transaction setString(BoundContract contract, TransactOpts opts, String teststring) throws Exception {
-        //Sending String to Test Contract
-        Interfaces params = Geth.newInterfaces(1);
-        Interface anInterface = Geth.newInterface();
-        anInterface.setString(teststring);
-        params.set(0,anInterface);
-        return contract.transact(opts, "set_s", params);//TODO function throws exception - > 'abi: cannot use slice as type string as argument'
-    }
-    public void smart_contract_interaction_get_string(View view){
-        try{
-            final String address_string = "0x8607e627604495ae9812c22bb1c98bdcba581978";
-            String abi = "[{\"constant\":false,\"inputs\":[],\"name\":\"get_s\",\"outputs\":[{\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"name\":\"new_s\",\"type\":\"string\"}],\"name\":\"set_s\",\"outputs\":[],\"payable\":false,\"type\":\"function\"},{\"inputs\":[{\"name\":\"d_s\",\"type\":\"string\"}],\"payable\":false,\"type\":\"constructor\"}]";
-            Address address = Geth.newAddressFromHex(address_string);
-            BoundContract contract = Geth.bindContract(address, abi, ec);
-            CallOpts callOpts = Geth.newCallOpts();
-            callOpts.setContext(ctx);
-            callOpts.setGasLimit(31500);
-            System.out.println("OUTPUT: " + getString(contract, callOpts));
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
-    private String getString(BoundContract contract, CallOpts opts) throws Exception {
-        Interfaces args = Geth.newInterfaces(0);
-        Interfaces results = Geth.newInterfaces(1);
-        Interface result = Geth.newInterface();
-        result.setDefaultString();
-        results.set(0, result);
-        contract.call(opts, results, "get_s", args);//TODO function throws exception - > 'abi: cannot unmarshal string in to []interface {}'
-        String string = results.get(0).getString();
-        return string;
     }
 }
 

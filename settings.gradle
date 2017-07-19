@@ -1,1 +1,1 @@
-include ':app', ':geth', ':geth-android-all-1.7.0-unstable-4d224977'
+include ':app', ':geth', ':geth-android-all-1.7.0-unstable-4d224977', ':geth-android-all-1.6.7-ab5646c5'

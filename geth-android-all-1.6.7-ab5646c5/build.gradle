@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('geth-android-all-1.6.7-ab5646c5.aar'))

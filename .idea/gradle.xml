@@ -10,6 +10,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/geth" />
+            <option value="$PROJECT_DIR$/geth-android-all-1.6.7-ab5646c5" />
             <option value="$PROJECT_DIR$/geth-android-all-1.7.0-unstable-4d224977" />
           </set>
         </option>
