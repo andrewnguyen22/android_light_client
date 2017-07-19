@@ -156,6 +156,9 @@ http://www.mobilefish.com/download/ethereum/rinkeby.json.txt
         }
     }
 
-This is as far as I have gotten, if you understand how to interact with Smart Contracts on the blockchain please answer my question below:
-Current Issue: https://github.com/ethereum/go-ethereum/issues/14832
+### This is as far as I have gotten! 
+
+If you understand how to interact with Smart Contracts on the blockchain please answer my question below:
+
+##### Current Issue: https://github.com/ethereum/go-ethereum/issues/14832
 
